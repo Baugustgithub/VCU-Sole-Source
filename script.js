@@ -330,7 +330,7 @@ function createStepThreeContent() {
   const optionsContainer = document.createElement('div');
   optionsContainer.className = 'space-y-3';
   
-  // Justification options
+  // justifcation options
   const justificationOptions = [
     {
       value: 'exclusive_distribution',
@@ -1082,20 +1082,22 @@ function resetForm() {
       
       <div class="flex justify-between mt-8">
         <button id="prev-button" 
-                class="btn-secondary px-4 py-2 rounded-md invisible" 
-                onclick="handlePrevious()">
+                class="btn-secondary px-4 py-2 rounded-md invisible">
           Previous
         </button>
         
         <button id="next-button" 
                 class="btn-primary px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50" 
-                onclick="handleNext()" 
                 disabled>
           Next
         </button>
       </div>
     </div>
   `;
+  
+  // Reattach event listeners to the buttons
+  document.getElementById('prev-button').addEventListener('click', handlePrevious);
+  document.getElementById('next-button').addEventListener('click', handleNext);
   
   // Load first step content
   createStepOneContent();
