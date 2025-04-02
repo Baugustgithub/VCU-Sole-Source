@@ -858,10 +858,19 @@ downloadButtons.innerHTML = `
   // Add to form container
   formContainer.appendChild(resultsContent);
   
-  // Add event listeners to buttons
-  document.getElementById('download-pdf').addEventListener('click', function() {
-    downloadAsPDF(formData, result);
-  });
+// Add event listeners to buttons
+document.getElementById('download-pdf').addEventListener('click', function() {
+  downloadAsPDF(formData, result);
+});
+
+document.getElementById('download-text').addEventListener('click', function() {
+  downloadAsText(formData, result);
+});
+
+document.getElementById('start-over').addEventListener('click', function() {
+  resetForm();
+});
+
   
   document.getElementById('download-text').addEventListener('click', function() {
     downloadAsText(formData, result);
