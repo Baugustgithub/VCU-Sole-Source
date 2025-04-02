@@ -875,10 +875,19 @@ function submitForm() {
     downloadAsText(formData, result);
   });
   
-document.getElementById('start-over').addEventListener('click', function() {
-  // Reload the entire page to reinit app properly
-  window.location.reload();
-});
+// After appending resultsContent to formContainer
+formContainer.appendChild(resultsContent);
+
+// Defer attachment to ensure DOM is updated
+setTimeout(() => {
+  const startOverBtn = document.getElementById('start-over');
+  if (startOverBtn) {
+    startOverBtn.addEventListener('click', () => {
+      window.location.reload();
+    });
+  }
+}, 0);
+
 
 
 // Format value to display in downloads
