@@ -848,9 +848,10 @@ downloadButtons.innerHTML = `
   <button id="download-text" class="btn-secondary px-4 py-2 rounded-md flex items-center justify-center">
     Download as Text
   </button>
-<button id="start-over" type="button" class="btn-secondary px-4 py-2 rounded-md flex items-center justify-center">
-  Start Over
-</button>
+  <button id="start-over" type="button" class="btn-secondary px-4 py-2 rounded-md flex items-center justify-center">
+    Start Over
+  </button>
+`; // <-- make sure this closing backtick is here!
 
 
   resultsContent.appendChild(downloadButtons);
