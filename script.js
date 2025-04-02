@@ -848,7 +848,7 @@ downloadButtons.innerHTML = `
   <button id="download-text" class="btn-secondary px-4 py-2 rounded-md flex items-center justify-center">
     Download as Text
   </button>
-  <button type="button" onclick="location.reload()" class="btn-secondary px-4 py-2 rounded-md flex items-center justify-center">
+  <button id="start-over" class="btn-secondary px-4 py-2 rounded-md flex items-center justify-center">
     Start Over
   </button>
 `;
