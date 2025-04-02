@@ -880,13 +880,11 @@ formContainer.appendChild(resultsContent);
 
 // Defer attachment to ensure DOM is updated
 setTimeout(() => {
-  const startOverBtn = document.getElementById('start-over');
-  if (startOverBtn) {
-    startOverBtn.addEventListener('click', () => {
-      window.location.reload();
-    });
+document.addEventListener('click', function(e) {
+  if (e.target && e.target.id === 'start-over') {
+    window.location.reload();
   }
-}, 0);
+});
 
 
 
