@@ -93,42 +93,34 @@ function updateProgressIndicator() {
 
 // Event handlers for selection options
 function handleAmountSelection(element) {
-  // Clear previous selections
   document.querySelectorAll('[data-value]').forEach(el => {
     el.classList.remove('selected');
     const radio = el.querySelector('input[type="radio"]');
     if (radio) radio.checked = false;
   });
   
-  // Set new selection
   element.classList.add('selected');
   const radio = element.querySelector('input[type="radio"]');
   if (radio) radio.checked = true;
   
-  // Update form data
   formData.amount = element.dataset.value;
   
-  // Enable next button
   document.getElementById('next-button').disabled = false;
 }
 
 function handleSingleSourceSelection(element) {
-  // Clear previous selections
   document.querySelectorAll('[data-value]').forEach(el => {
     el.classList.remove('selected');
     const radio = el.querySelector('input[type="radio"]');
     if (radio) radio.checked = false;
   });
   
-  // Set new selection
   element.classList.add('selected');
   const radio = element.querySelector('input[type="radio"]');
   if (radio) radio.checked = true;
   
-  // Update form data
   formData.single_source = element.dataset.value;
   
-  // Enable next button
   document.getElementById('next-button').disabled = false;
 }
 
@@ -139,7 +131,6 @@ function handleJustificationSelection(element) {
   
   const value = element.dataset.value;
   
-  // Update the form data
   if (checkbox.checked) {
     if (!formData.justification.includes(value)) {
       formData.justification.push(value);
@@ -148,33 +139,27 @@ function handleJustificationSelection(element) {
     formData.justification = formData.justification.filter(item => item !== value);
   }
   
-  // Enable next button if at least one option is selected
   document.getElementById('next-button').disabled = formData.justification.length === 0;
 }
 
 function handleAlternativesSelection(element) {
-  // Clear previous selections
   document.querySelectorAll('[data-value]').forEach(el => {
     el.classList.remove('selected');
     const radio = el.querySelector('input[type="radio"]');
     if (radio) radio.checked = false;
   });
   
-  // Set new selection
   element.classList.add('selected');
   const radio = element.querySelector('input[type="radio"]');
   if (radio) radio.checked = true;
   
-  // Update form data
   formData.alternatives_researched = element.dataset.value;
   
-  // Show/hide additional options based on selection
   const additionalOptions = document.getElementById('alternatives-additional-options');
   if (additionalOptions) {
     additionalOptions.style.display = formData.alternatives_researched === 'no' ? 'block' : 'none';
   }
   
-  // Reset alternatives reasons if "yes" is selected
   if (formData.alternatives_researched === 'yes') {
     formData.alternatives_reason_options = [];
     document.querySelectorAll('[name="alternatives_reason_options"]').forEach(checkbox => {
@@ -183,7 +168,6 @@ function handleAlternativesSelection(element) {
     });
   }
   
-  // Enable next button
   document.getElementById('next-button').disabled = false;
 }
 
@@ -194,7 +178,6 @@ function handleAlternativesReasonSelection(element) {
   
   const value = element.dataset.value;
   
-  // Update the form data
   if (checkbox.checked) {
     if (!formData.alternatives_reason_options.includes(value)) {
       formData.alternatives_reason_options.push(value);
@@ -211,7 +194,6 @@ function handlePriceSelection(element) {
   
   const value = element.dataset.value;
   
-  // Update the form data
   if (checkbox.checked) {
     if (!formData.price_reasonable.includes(value)) {
       formData.price_reasonable.push(value);
@@ -220,19 +202,48 @@ function handlePriceSelection(element) {
     formData.price_reasonable = formData.price_reasonable.filter(item => item !== value);
   }
   
-  // Enable next button if at least one option is selected
   document.getElementById('next-button').disabled = formData.price_reasonable.length === 0;
 }
 
 // Content creator functions for each step
 function createStepOneContent() {
-  // Step 1 content is already in the HTML
+  const stepContent = document.getElementBy Id('step-content');
+  stepContent.innerHTML = `
+    <p class="mb-4 text-gray-700">What is the estimated dollar amount of your procurement?</p>
+    <div class="space-y-3">
+      <div class="form-check" data-value="less_than_10k" onclick="handleAmountSelection(this)">
+        <div class="flex items-start">
+          <input type="radio" name="amount" id="amount_less_than_10k" class="mt-1 h-4 w-4 text-yellow-500 focus:ring-yellow-500 border-gray-300">
+          <label for="amount_less_than_10k" class="ml-3 cursor-pointer">
+            <span class="block text-sm font-medium text-gray-900">Less than $10,000</span>
+            <span class="block text-sm text-gray-500">Delegated authority threshold</span>
+          </label>
+        </div>
+      </div>
+      <div class="form-check" data-value="10k_to_200k" onclick="handleAmountSelection(this)">
+        <div class="flex items-start">
+          <input type="radio" name="amount" id="amount_10k_to_200k" class="mt-1 h-4 w-4 text-yellow-500 focus:ring-yellow-500 border-gray-300">
+          <label for="amount_10k_to_200k" class="ml-3 cursor-pointer">
+            <span class="block text-sm font-medium text-gray-900">$10,000 to $200,000</span>
+            <span class="block text-sm text-gray-500">Standard sole source documentation required</span>
+          </label>
+        </div>
+      </div>
+      <div class="form-check" data-value="above_200k" onclick="handleAmountSelection(this)">
+        <div class="flex items-start">
+          <input type="radio" name="amount" id="amount_above_200k" class="mt-1 h-4 w-4 text-yellow-500 focus:ring-yellow-500 border-gray-300">
+          <label for="amount_above_200k" class="ml-3 cursor-pointer">
+            <span class="block text-sm font-medium text-gray-900">$200,000 and above</span>
+            <span class="block text-sm text-gray-500">Additional approval required</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  `;
   
-  // Reset next button state based on selection
   document.getElementById('next-button').textContent = 'Next';
   document.getElementById('next-button').disabled = !formData.amount;
   
-  // Update any pre-selected options
   if (formData.amount) {
     const selectedElement = document.querySelector(`[data-value="${formData.amount}"]`);
     if (selectedElement) {
@@ -246,20 +257,16 @@ function createStepOneContent() {
 function createStepTwoContent() {
   const stepContent = document.getElementById('step-content');
   
-  // Clear previous content
   stepContent.innerHTML = '';
   
-  // Add description
   const description = document.createElement('p');
   description.className = 'mb-4 text-gray-700';
   description.textContent = steps[1].description;
   stepContent.appendChild(description);
   
-  // Create options container
   const optionsContainer = document.createElement('div');
   optionsContainer.className = 'space-y-3';
   
-  // Yes option
   const yesOption = document.createElement('div');
   yesOption.className = 'form-check' + (formData.single_source === 'yes' ? ' selected' : '');
   yesOption.dataset.value = 'yes';
@@ -275,7 +282,6 @@ function createStepTwoContent() {
   `;
   optionsContainer.appendChild(yesOption);
   
-  // No option
   const noOption = document.createElement('div');
   noOption.className = 'form-check' + (formData.single_source === 'no' ? ' selected' : '');
   noOption.dataset.value = 'no';
@@ -291,7 +297,6 @@ function createStepTwoContent() {
   `;
   optionsContainer.appendChild(noOption);
   
-  // Unsure option
   const unsureOption = document.createElement('div');
   unsureOption.className = 'form-check' + (formData.single_source === 'unsure' ? ' selected' : '');
   unsureOption.dataset.value = 'unsure';
@@ -307,30 +312,24 @@ function createStepTwoContent() {
   `;
   optionsContainer.appendChild(unsureOption);
   
-  // Add options to content
   stepContent.appendChild(optionsContainer);
   
-  // Reset next button state based on selection
   document.getElementById('next-button').disabled = !formData.single_source;
 }
 
 function createStepThreeContent() {
   const stepContent = document.getElementById('step-content');
   
-  // Clear previous content
   stepContent.innerHTML = '';
   
-  // Add description
   const description = document.createElement('p');
   description.className = 'mb-4 text-gray-700';
   description.textContent = steps[2].description;
   stepContent.appendChild(description);
   
-  // Create options container
   const optionsContainer = document.createElement('div');
   optionsContainer.className = 'space-y-3';
   
-  // justifcation options
   const justificationOptions = [
     {
       value: 'exclusive_distribution',
@@ -374,7 +373,6 @@ function createStepThreeContent() {
     },
   ];
   
-  // Create option elements
   justificationOptions.forEach(option => {
     const optionElement = document.createElement('div');
     optionElement.className = 'form-check' + (formData.justification.includes(option.value) ? ' selected' : '');
@@ -396,30 +394,24 @@ function createStepThreeContent() {
     optionsContainer.appendChild(optionElement);
   });
   
-  // Add options to content
   stepContent.appendChild(optionsContainer);
   
-  // Reset next button state based on selection
   document.getElementById('next-button').disabled = formData.justification.length === 0;
 }
 
 function createStepFourContent() {
   const stepContent = document.getElementById('step-content');
   
-  // Clear previous content
   stepContent.innerHTML = '';
   
-  // Add description
   const description = document.createElement('p');
   description.className = 'mb-4 text-gray-700';
   description.textContent = steps[3].description;
   stepContent.appendChild(description);
   
-  // Create options container
   const optionsContainer = document.createElement('div');
   optionsContainer.className = 'space-y-3';
   
-  // Yes option
   const yesOption = document.createElement('div');
   yesOption.className = 'form-check' + (formData.alternatives_researched === 'yes' ? ' selected' : '');
   yesOption.dataset.value = 'yes';
@@ -435,7 +427,6 @@ function createStepFourContent() {
   `;
   optionsContainer.appendChild(yesOption);
   
-  // No option
   const noOption = document.createElement('div');
   noOption.className = 'form-check' + (formData.alternatives_researched === 'no' ? ' selected' : '');
   noOption.dataset.value = 'no';
@@ -451,22 +442,18 @@ function createStepFourContent() {
   `;
   optionsContainer.appendChild(noOption);
   
-  // Add options to content
   stepContent.appendChild(optionsContainer);
   
-  // Create additional options for "No" selection
   const additionalOptions = document.createElement('div');
   additionalOptions.id = 'alternatives-additional-options';
   additionalOptions.className = 'mt-4 pt-4 border-t border-gray-200 space-y-3';
   additionalOptions.style.display = formData.alternatives_researched === 'no' ? 'block' : 'none';
   
-  // Add header for additional options
   const additionalHeader = document.createElement('p');
   additionalHeader.className = 'text-sm font-medium text-gray-700 mb-3';
   additionalHeader.textContent = 'Why have alternatives not been researched? (Select all that apply)';
   additionalOptions.appendChild(additionalHeader);
   
-  // Define reasons categories and options
   const reasonCategories = [
     {
       title: 'Strong justifications for sole source:',
@@ -494,7 +481,6 @@ function createStepFourContent() {
     }
   ];
   
-  // Create option elements for each category
   reasonCategories.forEach(category => {
     const categoryHeader = document.createElement('p');
     categoryHeader.className = 'text-sm font-semibold text-gray-800 mt-3 mb-2';
@@ -527,30 +513,24 @@ function createStepFourContent() {
     additionalOptions.appendChild(categoryOptionsContainer);
   });
   
-  // Add additional options to content
   stepContent.appendChild(additionalOptions);
   
-  // Reset next button state based on selection
   document.getElementById('next-button').disabled = !formData.alternatives_researched;
 }
 
 function createStepFiveContent() {
   const stepContent = document.getElementById('step-content');
   
-  // Clear previous content
   stepContent.innerHTML = '';
   
-  // Add description
   const description = document.createElement('p');
   description.className = 'mb-4 text-gray-700';
   description.textContent = steps[4].description;
   stepContent.appendChild(description);
   
-  // Create options container
   const optionsContainer = document.createElement('div');
   optionsContainer.className = 'space-y-3';
   
-  // Price reasonableness options
   const priceOptions = [
     {
       value: 'historical',
@@ -584,7 +564,6 @@ function createStepFiveContent() {
     }
   ];
   
-  // Create option elements
   priceOptions.forEach(option => {
     const optionElement = document.createElement('div');
     optionElement.className = 'form-check' + (formData.price_reasonable.includes(option.value) ? ' selected' : '');
@@ -606,103 +585,82 @@ function createStepFiveContent() {
     optionsContainer.appendChild(optionElement);
   });
   
-  // Add options to content
   stepContent.appendChild(optionsContainer);
   
-  // Change next button to Submit
   document.getElementById('next-button').textContent = 'Submit';
   
-  // Reset next button state based on selection
   document.getElementById('next-button').disabled = formData.price_reasonable.length === 0;
 }
 
 // Handle "Next" button click
 function handleNext() {
-  // Special case for final step - submit form
   if (currentStep === totalSteps) {
     submitForm();
     return;
   }
   
-  // Move to next step
   currentStep++;
   
-  // Update UI
   updateProgressIndicator();
   
-  // Show previous button if not on first step
   document.getElementById('prev-button').classList.remove('invisible');
   
-  // Load content for current step
   steps[currentStep - 1].createContent();
   
-  // Add fade-in animation
   const stepContent = document.getElementById('step-content');
   stepContent.classList.remove('fade-in');
-  void stepContent.offsetWidth; // Force reflow
+  void stepContent.offsetWidth;
   stepContent.classList.add('fade-in');
 }
 
 // Handle "Previous" button click
 function handlePrevious() {
-  // Move to previous step
   if (currentStep > 1) {
     currentStep--;
     
-    // Update UI
     updateProgressIndicator();
     
-    // Hide previous button if on first step
     if (currentStep === 1) {
       document.getElementById('prev-button').classList.add('invisible');
     }
     
-    // Load content for current step
     steps[currentStep - 1].createContent();
     
-    // Change button text back to "Next" if not on last step
     if (currentStep < totalSteps) {
       document.getElementById('next-button').textContent = 'Next';
     }
     
-    // Add fade-in animation
     const stepContent = document.getElementById('step-content');
     stepContent.classList.remove('fade-in');
-    void stepContent.offsetWidth; // Force reflow
+    void stepContent.offsetWidth;
     stepContent.classList.add('fade-in');
   }
 }
 
 // Determine form result
 function determineResult() {
-  // Purchases under $10k are under delegated authority
   if (formData.amount === 'less_than_10k') {
     return "delegated_authority";
   }
   
-  // If single source is "no", likely not a sole source
   if (formData.single_source === 'no') {
     return "not_sole_source";
   }
   
-  // If alternatives were researched and single source is "yes", likely a sole source
   if (formData.alternatives_researched === 'yes' && formData.single_source === 'yes') {
     return "likely_sole_source";
   }
   
-  // Check for strong justifications if alternatives not researched
   if (formData.alternatives_researched === 'no') {
     const strongJustifications = formData.alternatives_reason_options.filter(reason => 
       ["specified_in_grant", "continuation_existing", "exclusive_rights", "market_expertise"].includes(reason)
     );
     
-    // If has strong justifications and single source is "yes" or "unsure", may qualify
     if (strongJustifications.length > 0 && (formData.single_source === 'yes' || formData.single_source === 'unsure')) {
       return "may_qualify";
     }
   }
   
-  // Default case - not likely a sole source
   return "not_sole_source";
 }
 
@@ -711,24 +669,19 @@ function submitForm() {
   const result = determineResult();
   const formContainer = document.getElementById('form-container');
   
-  // Clear form content
   formContainer.innerHTML = '';
   
-  // Create results UI
   const resultsContent = document.createElement('div');
   resultsContent.className = 'p-6 fade-in';
   
-  // Add header
   const header = document.createElement('h2');
   header.className = 'text-xl font-semibold mb-4';
   header.textContent = 'Sole Source Determination Results';
   resultsContent.appendChild(header);
   
-  // Add determination result
   const determination = document.createElement('div');
   determination.className = 'mb-6 p-4 rounded-md';
   
-  // Set style and content based on result
   if (result === "delegated_authority") {
     determination.className += ' bg-blue-50 border border-blue-200';
     determination.innerHTML = `
@@ -760,7 +713,6 @@ function submitForm() {
   
   resultsContent.appendChild(determination);
   
-  // Add next steps section based on amount
   const nextStepsSection = document.createElement('div');
   nextStepsSection.className = 'mb-6';
   nextStepsSection.innerHTML = `
@@ -796,7 +748,6 @@ function submitForm() {
   nextStepsSection.innerHTML += `</div>`;
   resultsContent.appendChild(nextStepsSection);
   
-  // Add resources section
   const resources = document.createElement('div');
   resources.className = 'mb-6';
   resources.innerHTML = `
@@ -828,7 +779,6 @@ function submitForm() {
   `;
   resultsContent.appendChild(resources);
   
-  // Add disclaimer
   const disclaimer = document.createElement('div');
   disclaimer.className = 'bg-gray-50 border border-gray-200 rounded-md p-4 mb-6';
   disclaimer.innerHTML = `
@@ -838,7 +788,6 @@ function submitForm() {
   `;
   resultsContent.appendChild(disclaimer);
   
-  // Add download buttons
   const downloadButtons = document.createElement('div');
   downloadButtons.className = 'flex flex-col sm:flex-row gap-3';
   downloadButtons.innerHTML = `
@@ -863,10 +812,8 @@ function submitForm() {
   `;
   resultsContent.appendChild(downloadButtons);
   
-  // Add to form container
   formContainer.appendChild(resultsContent);
   
-  // Add event listeners to buttons
   document.getElementById('download-pdf').addEventListener('click', function() {
     downloadAsPDF(formData, result);
   });
@@ -921,7 +868,6 @@ function getReadableLabel(key, value) {
 function formatFormDataText(formData, result) {
   const lines = ["Sole Source Determination Results", "===========================", ""];
   
-  // Add determination result
   if (result === "likely_sole_source") {
     lines.push("DETERMINATION: Your procurement may qualify as a sole source.");
   } else if (result === "delegated_authority") {
@@ -936,33 +882,27 @@ function formatFormDataText(formData, result) {
   lines.push("Your Responses:");
   lines.push("-------------");
   
-  // Add all form fields except alternatives reasons (we'll add those separately)
   Object.entries(formData).forEach(([key, value]) => {
     if (value !== undefined && value !== null && key !== 'alternatives_reason_options') {
       lines.push(getReadableLabel(key, value));
     }
   });
   
-  // Handle alternatives reasons with categorization
   if (formData.alternatives_reason_options && formData.alternatives_reason_options.length > 0) {
     lines.push("\nReasons for not researching alternatives:");
     
-    // Legitimate reasons
     const legitimateReasons = formData.alternatives_reason_options.filter(reason => 
       ["specified_in_grant", "continuation_existing", "exclusive_rights", "market_expertise"].includes(reason)
     );
     
-    // Neutral reasons
     const neutralReasons = formData.alternatives_reason_options.filter(reason => 
       ["early_planning", "gathering_requirements"].includes(reason)
     );
     
-    // Poor planning reasons
     const poorPlanningReasons = formData.alternatives_reason_options.filter(reason => 
       ["timing_constraints", "previous_vendor_familiarity", "convenience"].includes(reason)
     );
     
-    // Add legitimate reasons with note
     if (legitimateReasons.length > 0) {
       lines.push("  Strong justifications for sole source:");
       legitimateReasons.forEach(reason => {
@@ -970,7 +910,6 @@ function formatFormDataText(formData, result) {
       });
     }
     
-    // Add neutral reasons with note
     if (neutralReasons.length > 0) {
       lines.push("  Reasons requiring more information:");
       neutralReasons.forEach(reason => {
@@ -978,7 +917,6 @@ function formatFormDataText(formData, result) {
       });
     }
     
-    // Add poor planning reasons with note
     if (poorPlanningReasons.length > 0) {
       lines.push("  Reasons that may need additional support:");
       poorPlanningReasons.forEach(reason => {
@@ -991,7 +929,6 @@ function formatFormDataText(formData, result) {
   lines.push("Next Steps:");
   lines.push("----------");
   
-  // Add next steps based on amount
   if (formData.amount === "less_than_10k") {
     lines.push("- The sole source procurement process is not applicable at this threshold");
     lines.push("- You can proceed with your purchase without sole source documentation");
@@ -1028,7 +965,6 @@ function formatFormDataText(formData, result) {
 
 // Download form data as PDF
 function downloadAsPDF(formData, result) {
-  const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   const text = formatFormDataText(formData, result);
   
@@ -1043,12 +979,11 @@ function downloadAsPDF(formData, result) {
 function downloadAsText(formData, result) {
   const text = formatFormDataText(formData, result);
   const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-  window.saveAs(blob, "sole-source-determination.txt");
+  saveAs(blob, "sole-source-determination.txt");
 }
 
 // Reset form to initial state
 function resetForm() {
-  // Reset form data
   formData = {
     amount: null,
     single_source: null,
@@ -1058,53 +993,68 @@ function resetForm() {
     price_reasonable: []
   };
   
-  // Reset UI
   currentStep = 1;
   
-  // Update progress indicator
-  updateProgressIndicator();
-  
-  // Reset form container
   const formContainer = document.getElementById('form-container');
   formContainer.innerHTML = `
     <div class="progress-bar">
       <div class="progress-bar-indicator" id="progress-indicator" style="width: 20%"></div>
     </div>
-    
     <div class="p-6">
       <div class="flex items-center justify-between mb-8">
         <h2 class="text-xl font-semibold" id="step-title">Step 1: Procurement Amount</h2>
         <div class="text-sm text-gray-500" id="step-counter">Step 1 of 5</div>
       </div>
-      
       <div id="step-content" class="mb-6 fade-in">
+        <p class="mb-4 text-gray-700">What is the estimated dollar amount of your procurement?</p>
+        <div class="space-y-3">
+          <div class="form-check" data-value="less_than_10k" onclick="handleAmountSelection(this)">
+            <div class="flex items-start">
+              <input type="radio" name="amount" id="amount_less_than_10k" class="mt-1 h-4 w-4 text-yellow-500 focus:ring-yellow-500 border-gray-300">
+              <label for="amount_less_than_10k" class="ml-3 cursor-pointer">
+                <span class="block text-sm font-medium text-gray-900">Less than $10,000</span>
+                <span class="block text-sm text-gray-500">Delegated authority threshold</span>
+              </label>
+            </div>
+          </div>
+          <div class="form-check" data-value="10k_to_200k" onclick="handleAmountSelection(this)">
+            <div class="flex items-start">
+              <input type="radio" name="amount" id="amount_10k_to_200k" class="mt-1 h-4 w-4 text-yellow-500 focus:ring-yellow-500 border-gray-300">
+              <label for="amount_10k_to_200k" class="ml-3 cursor-pointer">
+                <span class="block text-sm font-medium text-gray-900">$10,000 to $200,000</span>
+                <span class="block text-sm text-gray-500">Standard sole source documentation required</span>
+              </label>
+            </div>
+          </div>
+          <div class="form-check" data-value="above_200k" onclick="handleAmountSelection(this)">
+            <div class="flex items-start">
+              <input type="radio" name="amount" id="amount_above_200k" class="mt-1 h-4 w-4 text-yellow-500 focus:ring-yellow-500 border-gray-300">
+              <label for="amount_above_200k" class="ml-3 cursor-pointer">
+                <span class="block text-sm font-medium text-gray-900">$200,000 and above</span>
+                <span class="block text-sm text-gray-500">Additional approval required</span>
+              </label>
+            </div>
+          </div>
+        </div>
       </div>
-      
       <div class="flex justify-between mt-8">
-        <button id="prev-button" 
-                class="btn-secondary px-4 py-2 rounded-md invisible">
+        <button id="prev-button" class="btn-secondary px-4 py-2 rounded-md invisible">
           Previous
         </button>
-        
-        <button id="next-button" 
-                class="btn-primary px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50" 
-                disabled>
+        <button id="next-button" class="btn-primary px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50" disabled>
           Next
         </button>
       </div>
     </div>
   `;
   
-  // Reattach event listeners to the buttons
+  updateProgressIndicator();
+  
   document.getElementById('prev-button').addEventListener('click', handlePrevious);
   document.getElementById('next-button').addEventListener('click', handleNext);
-  
-  // Load first step content
-  createStepOneContent();
 }
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize application
   updateProgressIndicator();
 });
