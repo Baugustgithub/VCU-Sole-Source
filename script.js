@@ -875,58 +875,9 @@ function submitForm() {
     downloadAsText(formData, result);
   });
   
-function resetForm() {
-    // Reset form data
-    formData = {
-        amount: null,
-        single_source: null,
-        justification: [],
-        alternatives_researched: null,
-        alternatives_reason_options: [],
-        price_reasonable: []
-    };
-    
-    // Reset UI
-    currentStep = 1;
-    
-    // Update progress indicator
-    updateProgressIndicator();
-    
-    // Reset form container
-    const formContainer = document.getElementById('form-container');
-    formContainer.innerHTML = `
-        <div class="progress-bar">
-            <div class="progress-bar-indicator" id="progress-indicator" style="width: 20%"></div>
-        </div>
-        
-        <div class="p-6">
-            <div class="flex items-center justify-between mb-8">
-                <h2 class="text-xl font-semibold" id="step-title">Step 1: Procurement Amount</h2>
-                <div class="text-sm text-gray-500" id="step-counter">Step 1 of 5</div>
-            </div>
-            
-            <div id="step-content" class="mb-6 fade-in">
-            </div>
-            
-            <div class="flex justify-between mt-8">
-                <button id="prev-button" 
-                        class="btn-secondary px-4 py-2 rounded-md invisible" 
-                        onclick="handlePrevious()">
-                    Previous
-                </button>
-                
-                <button id="next-button" 
-                        class="btn-primary px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50" 
-                        onclick="handleNext()" 
-                        disabled>
-                    Next
-                </button>
-            </div>
-        </div>
-    `;
-    
-    // Load first step content
-    createStepOneContent();
+  document.getElementById('start-over').addEventListener('click', function() {
+    resetForm();
+  });
 }
 
 // Format value to display in downloads
