@@ -328,3 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
   updateProgressIndicator();
   createStepOneContent();
 });
+document.addEventListener('DOMContentLoaded', function () {
+  updateProgressIndicator();
+  createStepOneContent();  // ← This is essential for loading Step 1
+});
