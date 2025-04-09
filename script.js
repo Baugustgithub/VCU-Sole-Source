@@ -38,7 +38,6 @@ function handleAmountSelection(element) {
 
 function createStepOneContent() {
   const stepContent = document.getElementById('step-content');
-
   stepContent.innerHTML = `
     <p class="mb-4 text-gray-700">What is the estimated dollar amount of your procurement?</p>
     <div class="space-y-3">
@@ -75,6 +74,39 @@ function createStepOneContent() {
   document.getElementById('next-button').disabled = !formData.amount;
 }
 
+function handleSingleSourceSelection(element) {
+  document.querySelectorAll('[data-value]').forEach(el => {
+    el.classList.remove('selected');
+    const radio = el.querySelector('input[type="radio"]');
+    if (radio) radio.checked = false;
+  });
+
+  element.classList.add('selected');
+  const radio = element.querySelector('input[type="radio"]');
+  if (radio) radio.checked = true;
+  formData.single_source = element.dataset.value;
+
+  document.getElementById('next-button').disabled = false;
+}
+
+function createStepTwoContent() {
+  const stepContent = document.getElementById('step-content');
+  stepContent.innerHTML = `
+    <p class="mb-4 text-gray-700">Is this product or service available from only one source?</p>
+    <div class="space-y-3">
+      <div class="form-check" data-value="yes" onclick="handleSingleSourceSelection(this)">
+        <label class="flex items-start"><input type="radio" name="single_source"><span class="ml-3">Yes</span></label>
+      </div>
+      <div class="form-check" data-value="no" onclick="handleSingleSourceSelection(this)">
+        <label class="flex items-start"><input type="radio" name="single_source"><span class="ml-3">No</span></label>
+      </div>
+      <div class="form-check" data-value="unsure" onclick="handleSingleSourceSelection(this)">
+        <label class="flex items-start"><input type="radio" name="single_source"><span class="ml-3">I'm not sure</span></label>
+      </div>
+    </div>
+  `;
+  document.getElementById('next-button').disabled = !formData.single_source;
+}
 
 function handleJustificationSelection(element) {
   element.classList.toggle('selected');
@@ -140,6 +172,113 @@ function createStepThreeContent() {
 
   document.getElementById('next-button').disabled = formData.justification.length === 0;
 }
+function handleAlternativesSelection(element) {
+  document.querySelectorAll('[data-value]').forEach(el => {
+    el.classList.remove('selected');
+    const radio = el.querySelector('input[type="radio"]');
+    if (radio) radio.checked = false;
+  });
+
+  element.classList.add('selected');
+  const radio = element.querySelector('input[type="radio"]');
+  if (radio) radio.checked = true;
+  formData.alternatives_researched = element.dataset.value;
+
+  const reasonsContainer = document.getElementById('alternatives-reasons-container');
+  if (formData.alternatives_researched === "no") {
+    reasonsContainer.style.display = "block";
+  } else {
+    reasonsContainer.style.display = "none";
+    formData.alternatives_reason_options = [];
+  }
+
+  document.getElementById('next-button').disabled = false;
+}
+
+function handleReasonOptionSelection(element) {
+  element.classList.toggle('selected');
+  const checkbox = element.querySelector('input[type="checkbox"]');
+  checkbox.checked = !checkbox.checked;
+
+  const value = element.dataset.value;
+  if (checkbox.checked) {
+    if (!formData.alternatives_reason_options.includes(value)) {
+      formData.alternatives_reason_options.push(value);
+    }
+  } else {
+    formData.alternatives_reason_options = formData.alternatives_reason_options.filter(item => item !== value);
+  }
+}
+
+function createStepFourContent() {
+  const stepContent = document.getElementById('step-content');
+  stepContent.innerHTML = `
+    <p class="mb-4 text-gray-700">Have you researched alternative products or services?</p>
+    <div class="space-y-3">
+      <div class="form-check" data-value="yes" onclick="handleAlternativesSelection(this)">
+        <label class="flex items-start"><input type="radio" name="alternatives"><span class="ml-3">Yes</span></label>
+      </div>
+      <div class="form-check" data-value="no" onclick="handleAlternativesSelection(this)">
+        <label class="flex items-start"><input type="radio" name="alternatives"><span class="ml-3">No</span></label>
+      </div>
+    </div>
+    <div class="mt-4" id="alternatives-reasons-container" style="display:none;">
+      <p class="mb-2 text-sm text-gray-700">Why not?</p>
+      <div class="space-y-2">
+        <div class="form-check" data-value="Time constraints" onclick="handleReasonOptionSelection(this)">
+          <label class="flex items-start"><input type="checkbox"><span class="ml-3">Time constraints</span></label>
+        </div>
+        <div class="form-check" data-value="Specialized product" onclick="handleReasonOptionSelection(this)">
+          <label class="flex items-start"><input type="checkbox"><span class="ml-3">Specialized product</span></label>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('next-button').disabled = !formData.alternatives_researched;
+}
+
+function handlePriceSelection(element) {
+  element.classList.toggle('selected');
+  const checkbox = element.querySelector('input[type="checkbox"]');
+  checkbox.checked = !checkbox.checked;
+
+  const value = element.dataset.value;
+  if (checkbox.checked) {
+    if (!formData.price_reasonable.includes(value)) {
+      formData.price_reasonable.push(value);
+    }
+  } else {
+    formData.price_reasonable = formData.price_reasonable.filter(item => item !== value);
+  }
+
+  document.getElementById('next-button').disabled = formData.price_reasonable.length === 0;
+}
+
+function createStepFiveContent() {
+  const stepContent = document.getElementById('step-content');
+  const methods = [
+    "Comparison to market pricing",
+    "Historical pricing analysis",
+    "Price list/catalog validation",
+    "Exclusive license or patent verification",
+    "Written justification from department"
+  ];
+
+  stepContent.innerHTML = `<p class="mb-4 text-gray-700">Select methods used to determine price reasonableness:</p><div class="space-y-3">` +
+    methods.map(method => `
+      <div class="form-check" data-value="${method}" onclick="handlePriceSelection(this)">
+        <label class="flex items-start">
+          <input type="checkbox" class="mt-1 h-4 w-4 text-yellow-500 border-gray-300">
+          <span class="ml-3 text-sm text-gray-900">${method}</span>
+        </label>
+      </div>`).join('') +
+    `</div>`;
+
+  document.getElementById('next-button').textContent = 'Submit';
+  document.getElementById('next-button').disabled = formData.price_reasonable.length === 0;
+}
+
 function evaluateResult() {
   if (formData.amount === "less_than_10k") {
     return {
@@ -149,7 +288,6 @@ function evaluateResult() {
   }
 
   let score = 0;
-
   if (formData.amount === "above_200k") score -= 1;
   if (formData.single_source === "yes") score += 3;
   else if (formData.single_source === "no") score -= 3;
@@ -216,19 +354,14 @@ function submitForm() {
     </div>
   `;
 
-  document.getElementById('start-over').addEventListener('click', () => {
-    window.location.reload();
-  });
+  document.getElementById('start-over').addEventListener('click', () => window.location.reload());
 
   document.getElementById('download-pdf').addEventListener('click', () => {
     const doc = new jsPDF();
     doc.setFontSize(16);
-    doc.setTextColor(40);
     doc.text('Sole Source Procurement Summary', 20, 20);
 
-    doc.setFontSize(12);
     let y = 35;
-
     function addSection(title, value) {
       doc.setFont(undefined, 'bold');
       doc.text(`${title}:`, 20, y);
@@ -245,51 +378,15 @@ function submitForm() {
     addSection('Alternatives Researched', formData.alternatives_researched);
     addSection('Reasons for No Alternatives', formData.alternatives_reason_options.join(', '));
     addSection('Price Reasonableness', formData.price_reasonable.join(', '));
-
     doc.setFont(undefined, 'bold');
-    doc.setFontSize(14);
     doc.text(`Result: ${result.title}`, 20, y + 4);
     y += 10;
     doc.setFont(undefined, 'normal');
-    doc.setFontSize(12);
-    const resultLines = doc.splitTextToSize(result.message, 170);
-    doc.text(resultLines, 20, y);
+    const lines = doc.splitTextToSize(result.message, 170);
+    doc.text(lines, 20, y);
 
     doc.save('sole-source-summary.pdf');
   });
-}
-
-function resetForm() {
-  formData = {
-    amount: null,
-    single_source: null,
-    justification: [],
-    alternatives_researched: null,
-    alternatives_reason_options: [],
-    price_reasonable: []
-  };
-  currentStep = 1;
-  updateProgressIndicator();
-
-  const formContainer = document.getElementById('form-container');
-  formContainer.innerHTML = `
-    <div class="progress-bar">
-      <div class="progress-bar-indicator" id="progress-indicator" style="width: 20%"></div>
-    </div>
-    <div class="p-6">
-      <div class="flex items-center justify-between mb-8">
-        <h2 class="text-xl font-semibold" id="step-title">Step 1: Procurement Amount</h2>
-        <div class="text-sm text-gray-500" id="step-counter">Step 1 of 5</div>
-      </div>
-      <div id="step-content" class="mb-6 fade-in"></div>
-      <div class="flex justify-between mt-8">
-        <button id="prev-button" class="btn-secondary px-4 py-2 rounded-md invisible" onclick="handlePrevious()">Previous</button>
-        <button id="next-button" class="btn-primary px-4 py-2 rounded-md" onclick="handleNext()" disabled>Next</button>
-      </div>
-    </div>
-  `;
-
-  createStepOneContent();
 }
 
 function handleNext() {
@@ -324,5 +421,5 @@ const steps = [
 
 document.addEventListener('DOMContentLoaded', function () {
   updateProgressIndicator();
-  createStepOneContent(); // ← This line is required to show Step 1 on load!
+  createStepOneContent();
 });
