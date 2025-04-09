@@ -390,15 +390,23 @@ function submitForm() {
 }
 
 function handleNext() {
+  if (currentStep === 1 && formData.amount === "less_than_10k") {
+    // Short-circuit to result for delegated authority
+    submitForm();
+    return;
+  }
+
   if (currentStep === totalSteps) {
     submitForm();
     return;
   }
+
   currentStep++;
   updateProgressIndicator();
   document.getElementById('prev-button').classList.remove('invisible');
   steps[currentStep - 1].createContent();
 }
+
 
 function handlePrevious() {
   if (currentStep > 1) {
