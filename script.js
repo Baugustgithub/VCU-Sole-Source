@@ -290,21 +290,52 @@ function handlePrevious() {
 function submitForm() {
   const formContainer = document.getElementById('form-container');
   formContainer.innerHTML = `
-    <div class="p-6 fade-in">
-      <h2 class="text-xl font-semibold mb-4">Sole Source Determination Results</h2>
-      <div class="bg-green-50 border border-green-200 p-4 mb-6 rounded-md">
-        <h3 class="text-lg font-medium text-green-800 mb-2">Likely Sole Source</h3>
-        <p class="text-green-700">Based on your responses, your procurement may qualify as a sole source. Please complete the documentation form and consult Procurement Services as needed.</p>
-      </div>
-      <button id="start-over" class="btn-secondary px-4 py-2 rounded-md mt-6">Start Over</button>
+  <div class="p-6 fade-in">
+    <h2 class="text-xl font-semibold mb-4">Sole Source Determination Results</h2>
+    <div class="bg-green-50 border border-green-200 p-4 mb-6 rounded-md">
+      <h3 class="text-lg font-medium text-green-800 mb-2">Likely Sole Source</h3>
+      <p class="text-green-700">Based on your responses, your procurement may qualify as a sole source. Please complete the documentation form and consult Procurement Services as needed.</p>
     </div>
-  `;
+    <div class="flex space-x-4 mt-6">
+      <button id="start-over" class="btn-secondary px-4 py-2 rounded-md">Start Over</button>
+      <button id="download-pdf" class="btn-primary px-4 py-2 rounded-md">Download PDF</button>
+    </div>
+  </div>
+`;
+document.getElementById('start-over').addEventListener('click', () => {
+  window.location.reload();
+});
 
-  // ✅ Attach after rendering the button
-  document.getElementById('start-over').addEventListener('click', () => {
-    window.location.reload();
-  });
-}
+document.getElementById('download-pdf').addEventListener('click', () => {
+  const doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.setTextColor(40);
+  doc.text('Sole Source Procurement Summary', 20, 20);
+
+  doc.setFontSize(12);
+  let y = 35;
+
+  function addSection(title, value) {
+    doc.setFont(undefined, 'bold');
+    doc.text(`${title}:`, 20, y);
+    y += 6;
+    doc.setFont(undefined, 'normal');
+    const lines = doc.splitTextToSize(value || 'N/A', 170);
+    doc.text(lines, 20, y);
+    y += lines.length * 6 + 4;
+  }
+
+  addSection('Procurement Amount', formData.amount);
+  addSection('Single Source Status', formData.single_source);
+  addSection('Justifications', formData.justification.join(', '));
+  addSection('Alternatives Researched', formData.alternatives_researched);
+  addSection('Reasons for No Alternatives', formData.alternatives_reason_options.join(', '));
+  addSection('Price Reasonableness', formData.price_reasonable.join(', '));
+
+  doc.save('sole-source-summary.pdf');
+});
+
 
 
 function resetForm() {
