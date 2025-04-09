@@ -300,11 +300,12 @@ function submitForm() {
     </div>
   `;
 
-  document.getElementById('start-over').addEventListenerdocument.getElementById('start-over').addEventListener('click', () => {
-  window.location.reload();
-});
-('click', resetForm);
+  // ✅ Attach after rendering the button
+  document.getElementById('start-over').addEventListener('click', () => {
+    window.location.reload();
+  });
 }
+
 
 function resetForm() {
   formData = {
