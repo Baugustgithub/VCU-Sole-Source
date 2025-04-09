@@ -307,35 +307,47 @@ function submitForm() {
     window.location.reload();
   });
 
-  document.getElementById('download-pdf').addEventListener('click', () => {
-    const doc = new jsPDF();
-    doc.setFontSize(16);
-    doc.setTextColor(40);
-    doc.text('Sole Source Procurement Summary', 20, 20);
+document.getElementById('download-pdf').addEventListener('click', () => {
+  const doc = new jsPDF();
+  doc.setFontSize(16);
+  doc.setTextColor(40);
+  doc.text('Sole Source Procurement Summary', 20, 20);
 
-    doc.setFontSize(12);
-    let y = 35;
+  doc.setFontSize(12);
+  let y = 35;
 
-    function addSection(title, value) {
-      doc.setFont(undefined, 'bold');
-      doc.text(`${title}:`, 20, y);
-      y += 6;
-      doc.setFont(undefined, 'normal');
-      const lines = doc.splitTextToSize(value || 'N/A', 170);
-      doc.text(lines, 20, y);
-      y += lines.length * 6 + 4;
-    }
+  function addSection(title, value) {
+    doc.setFont(undefined, 'bold');
+    doc.text(`${title}:`, 20, y);
+    y += 6;
+    doc.setFont(undefined, 'normal');
+    const lines = doc.splitTextToSize(value || 'N/A', 170);
+    doc.text(lines, 20, y);
+    y += lines.length * 6 + 4;
+  }
 
-    addSection('Procurement Amount', formData.amount);
-    addSection('Single Source Status', formData.single_source);
-    addSection('Justifications', formData.justification.join(', '));
-    addSection('Alternatives Researched', formData.alternatives_researched);
-    addSection('Reasons for No Alternatives', formData.alternatives_reason_options.join(', '));
-    addSection('Price Reasonableness', formData.price_reasonable.join(', '));
+  // Add all answers
+  addSection('Procurement Amount', formData.amount);
+  addSection('Single Source Status', formData.single_source);
+  addSection('Justifications', formData.justification.join(', '));
+  addSection('Alternatives Researched', formData.alternatives_researched);
+  addSection('Reasons for No Alternatives', formData.alternatives_reason_options.join(', '));
+  addSection('Price Reasonableness', formData.price_reasonable.join(', '));
 
-    doc.save('sole-source-summary.pdf');
-  });
-}
+  // Add result section
+  doc.setFont(undefined, 'bold');
+  doc.setFontSize(14);
+  doc.text('Result: Likely Sole Source', 20, y + 4);
+  y += 10;
+  doc.setFont(undefined, 'normal');
+  doc.setFontSize(12);
+  const resultMsg = `Based on your responses, your procurement may qualify as a sole source. Please complete the documentation form and consult Procurement Services as needed.`;
+  const resultLines = doc.splitTextToSize(resultMsg, 170);
+  doc.text(resultLines, 20, y);
+
+  doc.save('sole-source-summary.pdf');
+});
+
 
 function resetForm() {
   formData = {
