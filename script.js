@@ -38,45 +38,43 @@ function handleAmountSelection(element) {
 
 function createStepOneContent() {
   const stepContent = document.getElementById('step-content');
+
   stepContent.innerHTML = `
     <p class="mb-4 text-gray-700">What is the estimated dollar amount of your procurement?</p>
     <div class="space-y-3">
       <div class="form-check" data-value="less_than_10k" onclick="handleAmountSelection(this)">
-        <div class="flex items-start">
+        <label class="flex items-start">
           <input type="radio" name="amount" class="mt-1 h-4 w-4 text-yellow-500 border-gray-300">
-          <label class="ml-3">
-            <span class="block text-sm font-medium text-gray-900">Less than $10,000</span>
-            <span class="block text-sm text-gray-500">Delegated authority threshold</span>
-          </label>
-        </div>
+          <span class="ml-3">Less than $10,000</span>
+        </label>
       </div>
       <div class="form-check" data-value="10k_to_200k" onclick="handleAmountSelection(this)">
-        <div class="flex items-start">
+        <label class="flex items-start">
           <input type="radio" name="amount" class="mt-1 h-4 w-4 text-yellow-500 border-gray-300">
-          <label class="ml-3">
-            <span class="block text-sm font-medium text-gray-900">$10,000 to $200,000</span>
-            <span class="block text-sm text-gray-500">Standard sole source documentation required</span>
-          </label>
-        </div>
+          <span class="ml-3">$10,000 to $200,000</span>
+        </label>
       </div>
       <div class="form-check" data-value="above_200k" onclick="handleAmountSelection(this)">
-        <div class="flex items-start">
+        <label class="flex items-start">
           <input type="radio" name="amount" class="mt-1 h-4 w-4 text-yellow-500 border-gray-300">
-          <label class="ml-3">
-            <span class="block text-sm font-medium text-gray-900">$200,000 and above</span>
-            <span class="block text-sm text-gray-500">Additional approval required</span>
-          </label>
-        </div>
+          <span class="ml-3">$200,000 and above</span>
+        </label>
       </div>
     </div>
   `;
 
   if (formData.amount) {
-    document.querySelector(`[data-value="${formData.amount}"]`).classList.add('selected');
+    const selected = document.querySelector(`[data-value="${formData.amount}"]`);
+    if (selected) {
+      selected.classList.add('selected');
+      const radio = selected.querySelector('input[type="radio"]');
+      if (radio) radio.checked = true;
+    }
   }
 
   document.getElementById('next-button').disabled = !formData.amount;
 }
+
 
 function handleJustificationSelection(element) {
   element.classList.toggle('selected');
