@@ -1,15 +1,9 @@
-// Sole Source Tool v1.0 | Last Updated: April 2025
 'use strict';
 
 const { jsPDF } = window.jspdf;
 
 let formData = {
-  amount: null,
-  single_source: null,
-  justification: [],
-  alternatives_researched: null,
-  alternatives_reason_options: [],
-  price_reasonable: []
+  amount: null
 };
 
 let currentStep = 1;
@@ -127,41 +121,6 @@ function submitForm() {
         <h3 class="text-lg font-medium text-green-800 mb-2">Likely Sole Source</h3>
         <p class="text-green-700">Based on your responses, your procurement may qualify as a sole source. Please complete the documentation form and consult Procurement Services as needed.</p>
       </div>
-      <div class="mb-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-3">Next Steps</h3>
-        <div class="border-l-4 border-gray-300 pl-4">
-          <p class="text-gray-700 mb-2">• Complete the Sole Source Documentation Form</p>
-          <p class="text-gray-700 mb-2">• Attach it to your RealSource requisition</p>
-          <p class="text-gray-700 mb-2">• Contact Procurement if needed</p>
-        </div>
-      </div>
-      <div class="mb-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-3">Additional Resources</h3>
-        <div class="border border-gray-200 rounded-md bg-white p-4">
-          <ul class="space-y-2 text-gray-700 list-disc pl-6">
-            <li>
-              <a href="https://procurement.vcu.edu/media/procurement/docs/word/Sole_Source_Documentation.docx" 
-                 class="text-blue-600 hover:text-blue-800 hover:underline"
-                 target="_blank">
-                Download Sole Source Documentation Form
-              </a>
-            </li>
-            <li>
-              Contact Purchasing:
-              <ul class="pl-4 mt-1 space-y-1">
-                <li>Email: <a href="mailto:purchasing@vcu.edu" class="text-blue-600 hover:text-blue-800 hover:underline">purchasing@vcu.edu</a></li>
-                <li>
-                  <a href="https://vcu-amc.ivanticloud.com/Default.aspx?Scope=ObjectWorkspace&CommandId=Search&ObjectType=ServiceReq%23#1729080190081" 
-                     class="text-blue-600 hover:text-blue-800 hover:underline"
-                     target="_blank">
-                    Submit a support ticket
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
       <button id="start-over" class="btn-secondary px-4 py-2 rounded-md mt-6">Start Over</button>
     </div>
   `;
@@ -172,14 +131,7 @@ function submitForm() {
 }
 
 function resetForm() {
-  formData = {
-    amount: null,
-    single_source: null,
-    justification: [],
-    alternatives_researched: null,
-    alternatives_reason_options: [],
-    price_reasonable: []
-  };
+  formData = { amount: null };
   currentStep = 1;
   updateProgressIndicator();
 
@@ -213,22 +165,39 @@ const steps = [
   {
     title: "Step 2: Single Source Status",
     description: "",
-    createContent: function () {}
+    createContent: function () {
+      const stepContent = document.getElementById('step-content');
+      stepContent.innerHTML = `<p class="text-gray-700">Coming soon...</p>`;
+      document.getElementById('next-button').disabled = false;
+    }
   },
   {
     title: "Step 3: Justification",
     description: "",
-    createContent: function () {}
+    createContent: function () {
+      const stepContent = document.getElementById('step-content');
+      stepContent.innerHTML = `<p class="text-gray-700">Coming soon...</p>`;
+      document.getElementById('next-button').disabled = false;
+    }
   },
   {
     title: "Step 4: Alternatives Research",
     description: "",
-    createContent: function () {}
+    createContent: function () {
+      const stepContent = document.getElementById('step-content');
+      stepContent.innerHTML = `<p class="text-gray-700">Coming soon...</p>`;
+      document.getElementById('next-button').disabled = false;
+    }
   },
   {
     title: "Step 5: Price Reasonableness",
     description: "",
-    createContent: function () {}
+    createContent: function () {
+      const stepContent = document.getElementById('step-content');
+      stepContent.innerHTML = `<p class="text-gray-700">Coming soon...</p>`;
+      document.getElementById('next-button').textContent = 'Submit';
+      document.getElementById('next-button').disabled = false;
+    }
   }
 ];
 
