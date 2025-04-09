@@ -77,6 +77,7 @@ function createStepOneContent() {
 
   document.getElementById('next-button').disabled = !formData.amount;
 }
+
 function handleSingleSourceSelection(element) {
   document.querySelectorAll('[data-value]').forEach(el => {
     el.classList.remove('selected');
@@ -98,22 +99,13 @@ function createStepTwoContent() {
     <p class="mb-4 text-gray-700">Is this product or service available from only one source?</p>
     <div class="space-y-3">
       <div class="form-check" data-value="yes" onclick="handleSingleSourceSelection(this)">
-        <label class="flex items-start">
-          <input type="radio" name="single_source">
-          <span class="ml-3">Yes</span>
-        </label>
+        <label class="flex items-start"><input type="radio" name="single_source"><span class="ml-3">Yes</span></label>
       </div>
       <div class="form-check" data-value="no" onclick="handleSingleSourceSelection(this)">
-        <label class="flex items-start">
-          <input type="radio" name="single_source">
-          <span class="ml-3">No</span>
-        </label>
+        <label class="flex items-start"><input type="radio" name="single_source"><span class="ml-3">No</span></label>
       </div>
       <div class="form-check" data-value="unsure" onclick="handleSingleSourceSelection(this)">
-        <label class="flex items-start">
-          <input type="radio" name="single_source">
-          <span class="ml-3">I'm not sure</span>
-        </label>
+        <label class="flex items-start"><input type="radio" name="single_source"><span class="ml-3">I'm not sure</span></label>
       </div>
     </div>
   `;
@@ -137,7 +129,6 @@ function handleJustificationSelection(element) {
 
   document.getElementById('next-button').disabled = formData.justification.length === 0;
 }
-
 function createStepThreeContent() {
   const stepContent = document.getElementById('step-content');
   const reasons = [
@@ -307,47 +298,46 @@ function submitForm() {
     window.location.reload();
   });
 
-document.getElementById('download-pdf').addEventListener('click', () => {
-  const doc = new jsPDF();
-  doc.setFontSize(16);
-  doc.setTextColor(40);
-  doc.text('Sole Source Procurement Summary', 20, 20);
+  document.getElementById('download-pdf').addEventListener('click', () => {
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.setTextColor(40);
+    doc.text('Sole Source Procurement Summary', 20, 20);
 
-  doc.setFontSize(12);
-  let y = 35;
+    doc.setFontSize(12);
+    let y = 35;
 
-  function addSection(title, value) {
+    function addSection(title, value) {
+      doc.setFont(undefined, 'bold');
+      doc.text(`${title}:`, 20, y);
+      y += 6;
+      doc.setFont(undefined, 'normal');
+      const lines = doc.splitTextToSize(value || 'N/A', 170);
+      doc.text(lines, 20, y);
+      y += lines.length * 6 + 4;
+    }
+
+    addSection('Procurement Amount', formData.amount);
+    addSection('Single Source Status', formData.single_source);
+    addSection('Justifications', formData.justification.join(', '));
+    addSection('Alternatives Researched', formData.alternatives_researched);
+    addSection('Reasons for No Alternatives', formData.alternatives_reason_options.join(', '));
+    addSection('Price Reasonableness', formData.price_reasonable.join(', '));
+
+    // Result section
     doc.setFont(undefined, 'bold');
-    doc.text(`${title}:`, 20, y);
-    y += 6;
+    doc.setFontSize(14);
+    doc.text('Result: Likely Sole Source', 20, y + 4);
+    y += 10;
     doc.setFont(undefined, 'normal');
-    const lines = doc.splitTextToSize(value || 'N/A', 170);
-    doc.text(lines, 20, y);
-    y += lines.length * 6 + 4;
-  }
+    doc.setFontSize(12);
+    const resultMsg = `Based on your responses, your procurement may qualify as a sole source. Please complete the documentation form and consult Procurement Services as needed.`;
+    const resultLines = doc.splitTextToSize(resultMsg, 170);
+    doc.text(resultLines, 20, y);
 
-  // Add all answers
-  addSection('Procurement Amount', formData.amount);
-  addSection('Single Source Status', formData.single_source);
-  addSection('Justifications', formData.justification.join(', '));
-  addSection('Alternatives Researched', formData.alternatives_researched);
-  addSection('Reasons for No Alternatives', formData.alternatives_reason_options.join(', '));
-  addSection('Price Reasonableness', formData.price_reasonable.join(', '));
-
-  // Add result section
-  doc.setFont(undefined, 'bold');
-  doc.setFontSize(14);
-  doc.text('Result: Likely Sole Source', 20, y + 4);
-  y += 10;
-  doc.setFont(undefined, 'normal');
-  doc.setFontSize(12);
-  const resultMsg = `Based on your responses, your procurement may qualify as a sole source. Please complete the documentation form and consult Procurement Services as needed.`;
-  const resultLines = doc.splitTextToSize(resultMsg, 170);
-  doc.text(resultLines, 20, y);
-
-  doc.save('sole-source-summary.pdf');
-});
-
+    doc.save('sole-source-summary.pdf');
+  });
+}
 
 function resetForm() {
   formData = {
