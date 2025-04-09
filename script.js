@@ -326,9 +326,6 @@ const steps = [
 
 document.addEventListener('DOMContentLoaded', function () {
   updateProgressIndicator();
-  createStepOneContent();
+  createStepOneContent();  // ✅ This is what loads Step 1!
 });
-document.addEventListener('DOMContentLoaded', function () {
-  updateProgressIndicator();
-  createStepOneContent();  // ← This is essential for loading Step 1
-});
+
