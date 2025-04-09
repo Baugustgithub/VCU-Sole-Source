@@ -300,7 +300,10 @@ function submitForm() {
     </div>
   `;
 
-  document.getElementById('start-over').addEventListener('click', resetForm);
+  document.getElementById('start-over').addEventListenerdocument.getElementById('start-over').addEventListener('click', () => {
+  window.location.reload();
+});
+('click', resetForm);
 }
 
 function resetForm() {
